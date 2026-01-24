@@ -136,13 +136,13 @@ impl<T: Default, I: Into<usize>> DefaultVec<T, I> {
 
     /// Returns an iterator over the elements of this list
     /// the iterator will have `capacity` elements
-    pub fn iter(&self) -> slice::Iter<T> {
+    pub fn iter(&self) -> slice::Iter<'_, T> {
         self.0.iter()
     }
 
     /// Returns a mutable iterator over the elements of this list
     /// the iterator will have `capacity` elements
-    pub fn iter_mut(&mut self) -> slice::IterMut<T> {
+    pub fn iter_mut(&mut self) -> slice::IterMut<'_, T> {
         self.0.iter_mut()
     }
 }
