@@ -73,7 +73,8 @@ impl<N: FlagLength, I> Clone for FlagVec<N, I> {
     }
 
     fn clone_from(&mut self, source: &Self) {
-        self.0.clone_from(&source.0)
+        self.0.clone_from(&source.0);
+        self.1.clone_from(&source.1);
     }
 }
 
@@ -222,7 +223,8 @@ fn test() {
         fvor.or_assign(i, x);
     }
     assert_eq!(&fvor.iter().collect::<Vec<_>>()[..100], &vor);
-    let mut fvand = fv1.clone();
+    let mut fvand = fvor;
+    fvand.clone_from(&fv1);
     for (i, &x) in v2.iter().enumerate() {
         fvand.and_assign(i, x);
     }
