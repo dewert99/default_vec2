@@ -45,6 +45,7 @@ fn test_clone_long() {
     let mut y: DefaultVec<u32> = DefaultVec::default();
     *y.get_mut(5) = 7;
     x.clone_from(&y);
+    assert_eq!(x.capacity(), y.capacity());
     assert_eq!(x.get(0), 0);
     assert_eq!(x.get(5), 7);
     assert_eq!(x, y);
@@ -97,12 +98,19 @@ pub trait ConstDefault: Default + 'static {
 impl<T: Default, I: Into<usize>> DefaultVec<T, I> {
     #[cold]
     #[inline(never)]
-    pub(super) fn reserve(&mut self, i: usize) {
+    fn reserve_idx(&mut self, i: usize) {
         let mut v = mem::take(&mut self.0).into_vec();
         v.reserve(i + 1 - v.len());
         v.resize_with(v.capacity(), T::default);
         self.0 = v.into_boxed_slice();
         assert!(i < self.0.len())
+    }
+
+    pub(super) fn reserve(&mut self, i: usize) {
+        let mut v = mem::take(&mut self.0).into_vec();
+        v.reserve_exact(i - v.len());
+        v.resize_with(v.capacity(), T::default);
+        self.0 = v.into_boxed_slice();
     }
 
     /// Returns mutable access to the element at `i`
@@ -111,7 +119,7 @@ impl<T: Default, I: Into<usize>> DefaultVec<T, I> {
         if i < self.0.len() {
             &mut self.0[i]
         } else {
-            self.reserve(i);
+            self.reserve_idx(i);
             &mut self.0[i]
         }
     }

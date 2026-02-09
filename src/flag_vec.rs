@@ -1,5 +1,4 @@
 use crate::default_vec::DefaultVec;
-use alloc::vec::Vec;
 use core::fmt::{Debug, Formatter};
 use core::marker::PhantomData;
 
@@ -189,6 +188,7 @@ impl<N: FlagLength, I: Into<usize>> FlagVec<N, I> {
 #[test]
 fn test() {
     use alloc::vec;
+    use alloc::vec::Vec;
     let v1 = vec![
         145, 114, 177, 130, 57, 228, 108, 147, 117, 119, 102, 143, 216, 215, 2, 215, 191, 217, 96,
         157, 200, 82, 220, 211, 66, 183, 16, 173, 174, 246, 232, 248, 174, 40, 33, 169, 12, 191,
